@@ -19,8 +19,8 @@ void UARTSetBaud(uint32_t moduleInstance, eUSCI_UART_Config *uartConfig_p, UARTB
 {
     switch(newBaud)
     {
-    case baud9600:
-        // Configure UART to 9600bps for 48MHz clock and initialize/enable
+    case P1_9600:
+        // Configure UART to 9600bps for 48MHz clock
         uartConfig_p->selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;           // SMCLK Clock Source = 48MHz
         uartConfig_p->clockPrescalar =  312;                                        // UCBR   = 312
         uartConfig_p->firstModReg = 8;                                              // UCBRF  = 8
@@ -31,32 +31,15 @@ void UARTSetBaud(uint32_t moduleInstance, eUSCI_UART_Config *uartConfig_p, UARTB
         uartConfig_p->uartMode = EUSCI_A_UART_MODE,                                 // UART mode
         uartConfig_p->overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION; // Oversampling
 
-        // Maintain oversampling
-
         // Reinitialize and enable UART module
         UpdateUART(moduleInstance, uartConfig_p);
         break;
-    case baud19200:
-        // Configure UART to 19200bps for 48MHz clock and initialize/enable
+    case P2_19200:
+        // Configure UART to 19200bps for 48MHz clock
         uartConfig_p->selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;           // SMCLK Clock Source = 48MHz
         uartConfig_p->clockPrescalar =  156;                                        // UCBR   = 312
         uartConfig_p->firstModReg = 4;                                              // UCBRF  = 8
         uartConfig_p->secondModReg = 0x22;                                          // UCBRS  = 0x55
-        uartConfig_p->parity = EUSCI_A_UART_NO_PARITY,                              // No Parity
-        uartConfig_p->msborLsbFirst = EUSCI_A_UART_LSB_FIRST,                       // LSB First
-        uartConfig_p->numberofStopBits = EUSCI_A_UART_ONE_STOP_BIT,                 // One stop bit
-        uartConfig_p->uartMode = EUSCI_A_UART_MODE,                                 // UART mode
-        uartConfig_p->overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION; // Oversampling
-
-        // Reinitialize and enable UART module
-        UpdateUART(moduleInstance, uartConfig_p);
-        break;
-    case baud57600:
-        // Configure UART to 57600bps for 48MHz clock and initialize/enable
-        uartConfig_p->selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;           // SMCLK Clock Source = 48MHz
-        uartConfig_p->clockPrescalar =  52;                                        // UCBR   = 312
-        uartConfig_p->firstModReg = 1;                                              // UCBRF  = 8
-        uartConfig_p->secondModReg = 0x02;                                          // UCBRS  = 0x55
         uartConfig_p->parity = EUSCI_A_UART_NO_PARITY,                              // No Parity
         uartConfig_p->msborLsbFirst = EUSCI_A_UART_LSB_FIRST,                       // LSB First
         uartConfig_p->numberofStopBits = EUSCI_A_UART_ONE_STOP_BIT,                 // One stop bit
@@ -101,4 +84,47 @@ bool UARTCanSend(uint32_t moduleInstance)
 void UARTPutChar(uint32_t moduleInstance, uint8_t tChar)
 {
     UART_transmitData(moduleInstance, tChar);
+}
+
+///
+//  Game Console
+///
+
+// Helper Function
+// Writes strings to UART console
+void writeString(uint32_t moduleInstance, string_t string, unsigned int size)
+{
+    int stringIndex = 0;
+    bool complete = false;
+    while(!complete)
+    {
+        if (UARTCanSend(moduleInstance))
+        {
+            UARTPutChar(moduleInstance, string.string[stringIndex]);
+            stringIndex++;
+        }
+
+        if (stringIndex == size) complete = true;
+    }
+}
+
+#define string1Size 22
+#define string2Size 18
+#define string3size 39
+#define string4size 46
+void consoleIntro(uint32_t moduleInstance)
+{
+    string_t string;
+
+    string.string = "Just Monika Presents\r\n";
+    writeString(moduleInstance, string, string1Size);
+
+    string.string = "Chess for MSP432\r\n";
+    writeString(moduleInstance, string, string2Size);
+
+    string.string = "Press h for instructions and controls\r\n";
+    writeString(moduleInstance, string, string3size);
+
+    string.string = "Otherwise press any other key for game start\r\n";
+    writeString(moduleInstance, string, string4size);
 }

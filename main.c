@@ -6,9 +6,6 @@
 // Module Includes
 #include "UART_HAL.h"
 
-// ModuleInstance for UART Protocol
-#define moduleInstance EUSCI_A0_BASE
-
 ///
 //  Auxillary-to-Main Function Prototypes
 ///
@@ -23,32 +20,10 @@ void initialize(eUSCI_UART_Config UART_Config);
 int main(void)
 {
     // Initialize UART connection
-    eUSCI_UART_Config UART_Config;
+    eUSCI_UART_Config UART_Config = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     initialize(UART_Config);
 
-    while(1)
-    {
-        // Temporary block
-        // Source: ECE-2534, Spring 2019 with Dr. Nazhand-Ali (Homework 6 UART Starter Code)
-        char rChar, tChar;
-        if (UARTHasChar(EUSCI_A0_BASE))
-        {
-            rChar = UARTGetChar(EUSCI_A0_BASE);
-
-            // Depending on if the received char is a Number, a Letter, or Otherwise,
-            // the transmit char is N, L or O
-            if (('0'<=rChar) && (rChar <= '9'))
-                tChar = 'N';
-            else if ((('a'<=rChar) && (rChar <= 'z')) ||
-                    (('A'<=rChar) && (rChar <= 'Z')))
-                tChar = 'L';
-            else
-                tChar = 'O';
-
-            if (UARTCanSend(EUSCI_A0_BASE))
-                UARTPutChar(EUSCI_A0_BASE, tChar);
-        }
-    }
+    consoleIntro(localModuleInstance);
 }
 
 ///
@@ -57,6 +32,9 @@ int main(void)
 
 void initialize(eUSCI_UART_Config UART_Config)
 {
+    // Stop the Watchdog Timer
+    WDT_A_hold(WDT_A_BASE);
+
     // Configure UART to 9600bps for 48MHz clock and initialize
     UART_Config.selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;             // SMCLK Clock Source = 48MHz
     UART_Config.clockPrescalar =  312;                                          // UCBR   = 312
@@ -67,5 +45,5 @@ void initialize(eUSCI_UART_Config UART_Config)
     UART_Config.numberofStopBits = EUSCI_A_UART_ONE_STOP_BIT,                   // One stop bit
     UART_Config.uartMode = EUSCI_A_UART_MODE,                                   // UART mode
     UART_Config.overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION;   // Oversampling
-    InitUART(moduleInstance, &UART_Config, GPIO_PORT_P1, GPIO_PIN2 | GPIO_PIN3);
+    InitUART(localModuleInstance, &UART_Config, GPIO_PORT_P1, GPIO_PIN2 | GPIO_PIN3);
 }

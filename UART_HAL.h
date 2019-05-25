@@ -1,5 +1,17 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-typedef enum {baud9600, baud19200, baud57600} UARTBaudRate_t;
+
+// Enum for baud rates
+// Player 1 will use 9600bps
+// Player 2 will use 19200bps
+typedef enum {P1_9600, P2_19200} UARTBaudRate_t;
+
+// Module instance for MSP432 UART Protocol
+#define localModuleInstance EUSCI_A0_BASE
+
+typedef struct
+{
+    char* string;
+} string_t;
 
 ///
 //  Initialization
@@ -39,3 +51,10 @@ bool UARTCanSend(uint32_t moduleInstance);
 
 // Transmits a character to the MobaXTerm console
 void UARTPutChar(uint32_t moduleInstance, uint8_t tChar);
+
+///
+//  Game Console
+///
+
+// Displays opening instructions to UART console
+void consoleIntro(uint32_t moduleInstance);
