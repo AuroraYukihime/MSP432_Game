@@ -4,6 +4,7 @@
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 
 // Module Includes
+#include "Graphics_HAL.h"
 #include "UART_HAL.h"
 
 ///
@@ -11,7 +12,7 @@
 ///
 
 // Initializes the UART module
-void initialize(eUSCI_UART_Config UART_Config);
+void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config);
 
 ///
 //  Main Function
@@ -20,17 +21,28 @@ void initialize(eUSCI_UART_Config UART_Config);
 int main(void)
 {
     // Initialize UART connection
+    Graphics_Context g_sContext;
     eUSCI_UART_Config UART_Config = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    initialize(UART_Config);
+    initialize(&g_sContext, UART_Config);
 
-    consoleIntro(localModuleInstance);
+    // Driving while loop w/ UART controller
+    bool gameOver = false;
+    bool gameStart = false;
+    while(!gameOver)
+    {
+        if(!gameStart && UARTHasChar(localModuleInstance))
+        {
+            if (UARTGetChar(localModuleInstance) == 'h') consoleHelp(localModuleInstance);
+            else gameStart = true;
+        }
+    }
 }
 
 ///
 //  Auxillary to Main Functions
 ///
 
-void initialize(eUSCI_UART_Config UART_Config)
+void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config)
 {
     // Stop the Watchdog Timer
     WDT_A_hold(WDT_A_BASE);
@@ -46,4 +58,10 @@ void initialize(eUSCI_UART_Config UART_Config)
     UART_Config.uartMode = EUSCI_A_UART_MODE,                                   // UART mode
     UART_Config.overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION;   // Oversampling
     InitUART(localModuleInstance, &UART_Config, GPIO_PORT_P1, GPIO_PIN2 | GPIO_PIN3);
+
+    // Display opening console text
+    consoleIntro(localModuleInstance);
+
+    // Initialize and draw game graphics
+    initGraphics(g_sContext_p);
 }
