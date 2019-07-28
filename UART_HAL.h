@@ -1,3 +1,6 @@
+#ifndef UART_HAL_H_
+#define UART_HAL_H_
+
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 
 // Enum for baud rates
@@ -8,6 +11,9 @@ typedef enum {P1_9600, P2_19200} UARTBaudRate_t;
 // Module instance for MSP432 UART Protocol
 #define localModuleInstance EUSCI_A0_BASE
 
+#define spacerSize   1
+
+// String container to bypass Warning 169-D
 typedef struct
 {
     char* string;
@@ -58,3 +64,8 @@ void UARTPutChar(uint32_t moduleInstance, uint8_t tChar);
 
 // Displays opening instructions to UART console
 void consoleIntro(uint32_t moduleInstance);
+
+// Displays instructions and controls to UART console
+void consoleHelp(uint32_t moduleInstance);
+
+#endif

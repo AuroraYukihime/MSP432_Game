@@ -25,6 +25,10 @@ int main(void)
     eUSCI_UART_Config UART_Config = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     initialize(&g_sContext, UART_Config);
 
+    // Draw opening splash
+    // TODO: Block with music
+    drawOpeningSplash(&g_sContext);
+
     // Driving while loop w/ UART controller
     bool gameOver = false;
     bool gameStart = false;
@@ -32,7 +36,11 @@ int main(void)
     {
         if(!gameStart && UARTHasChar(localModuleInstance))
         {
-            if (UARTGetChar(localModuleInstance) == 'h') consoleHelp(localModuleInstance);
+            if (UARTGetChar(localModuleInstance) == 'h')
+            {
+
+                consoleHelp(localModuleInstance);
+            }
             else gameStart = true;
         }
     }

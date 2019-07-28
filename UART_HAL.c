@@ -108,23 +108,50 @@ void writeString(uint32_t moduleInstance, string_t string, unsigned int size)
     }
 }
 
-#define string1Size 22
-#define string2Size 18
-#define string3size 39
-#define string4size 46
+#define intro1Size 22
+#define intro2Size 28
+#define intro3size 39
+#define intro4size 46
 void consoleIntro(uint32_t moduleInstance)
 {
     string_t string;
 
     string.string = "Just Monika Presents\r\n";
-    writeString(moduleInstance, string, string1Size);
+    writeString(moduleInstance, string, intro1Size);
 
-    string.string = "Chess for MSP432\r\n";
-    writeString(moduleInstance, string, string2Size);
+    string.string = "Placeholder RPG for MSP432\r\n";
+    writeString(moduleInstance, string, intro2Size);
 
     string.string = "Press h for instructions and controls\r\n";
-    writeString(moduleInstance, string, string3size);
+    writeString(moduleInstance, string, intro3size);
 
     string.string = "Otherwise press any other key for game start\r\n";
-    writeString(moduleInstance, string, string4size);
+    writeString(moduleInstance, string, intro4size);
+
+    string.string = "\n";
+    writeString(moduleInstance, string, spacerSize);
+}
+
+#define help1Size 26
+#define help2Size 62
+#define help3Size 23
+#define help4Size 50
+void consoleHelp(uint32_t moduleInstance)
+{
+    string_t string;
+
+    string.string = "Player 1 is on 9600bps.\r\n";
+    writeString(moduleInstance, string, help1Size);
+
+    string.string = "Move using joystick. Keep moving until you find the monster.\r\n";
+    writeString(moduleInstance, string, help2Size);
+
+    string.string = "Battle mechanics TBD.\r\n";
+    writeString(moduleInstance, string, help3Size);
+
+    string.string = "Reference manual for additional rules in effect.\r\n";
+    writeString(moduleInstance, string, help4Size);
+
+    string.string = "\n";
+    writeString(moduleInstance, string, spacerSize);
 }

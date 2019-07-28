@@ -25,6 +25,8 @@
 #define g 112
 #define h 128
 
+extern Graphics_Image splash8BPP_COMP_RLE8;
+
 ///
 //  Game initialization
 ///
@@ -34,5 +36,12 @@ void initGraphics(Graphics_Context *g_sContext_p);
 
 // Draws the initial state of the game
 void drawGameDisplay(Graphics_Context *g_sContext_p);
+
+///
+//  Splash Screens
+///
+
+// Draws the opening splash screen at program start
+void drawOpeningSplash(Graphics_Context *g_sContext_p);
 
 #endif

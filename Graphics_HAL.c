@@ -88,3 +88,8 @@ void drawGameDisplay(Graphics_Context *g_sContext_p)
     drawMaroonSquare(g_sContext_p, d, e-1, r7, r8-1);
     drawMaroonSquare(g_sContext_p, f, g-1, r7, r8-1);
 }
+
+void drawOpeningSplash(Graphics_Context *g_sContext_p)
+{
+    Graphics_drawImage(g_sContext_p, &splash8BPP_COMP_RLE8, 0, 0);
+}
