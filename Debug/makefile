@@ -10,7 +10,11 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./Graphics_HAL.obj" \
+"./Timer32_HAL.obj" \
+"./UART_HAL.obj" \
 "./main.obj" \
+"./splash.obj" \
 "./system_msp432p401r.obj" \
 "./LcdDriver/Crystalfontz128x128_ST7735.obj" \
 "./LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" \
@@ -171,8 +175,8 @@ JustMonika_Chess.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "system_msp432p401r.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "ccs\startup_msp432p401r_ccs.obj" "fonts\fontcmtt16.obj" 
-	-$(RM) "main.d" "system_msp432p401r.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "ccs\startup_msp432p401r_ccs.d" "fonts\fontcmtt16.d" 
+	-$(RM) "Graphics_HAL.obj" "Timer32_HAL.obj" "UART_HAL.obj" "main.obj" "splash.obj" "system_msp432p401r.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "ccs\startup_msp432p401r_ccs.obj" "fonts\fontcmtt16.obj" 
+	-$(RM) "Graphics_HAL.d" "Timer32_HAL.d" "UART_HAL.d" "main.d" "splash.d" "system_msp432p401r.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "ccs\startup_msp432p401r_ccs.d" "fonts\fontcmtt16.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

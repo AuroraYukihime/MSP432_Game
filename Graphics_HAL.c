@@ -23,7 +23,7 @@ void initGraphics(Graphics_Context *g_sContext_p)
 
     Graphics_clearDisplay(g_sContext_p);
 
-    drawGameDisplay(g_sContext_p);
+    //drawGameDisplay(g_sContext_p);
 }
 
 void drawMaroonSquare(Graphics_Context* g_sContext_p, unsigned int xMin, unsigned int xMax, unsigned int yMin, unsigned int yMax)

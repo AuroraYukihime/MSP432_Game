@@ -53,6 +53,10 @@ main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/_ti_config.h
 main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/linkage.h
 main.obj: ../LcdDriver/Crystalfontz128x128_ST7735.h
 main.obj: C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/grlib/grlib.h
+main.obj: ../Graphics_HAL.h
+main.obj: C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/grlib/grlib.h
+main.obj: ../UART_HAL.h
+main.obj: ../Timer32_HAL.h
 
 ../main.c: 
 C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/devices/msp432p4xx/driverlib/driverlib.h: 
@@ -107,3 +111,7 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/_ti_config.h:
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.4.LTS/include/linkage.h: 
 ../LcdDriver/Crystalfontz128x128_ST7735.h: 
 C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/grlib/grlib.h: 
+../Graphics_HAL.h: 
+C:/ti/simplelink_msp432p4_sdk_2_40_00_10/source/ti/grlib/grlib.h: 
+../UART_HAL.h: 
+../Timer32_HAL.h: 
