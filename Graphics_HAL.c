@@ -93,3 +93,4 @@ void drawOpeningSplash(Graphics_Context *g_sContext_p)
 {
     Graphics_drawImage(g_sContext_p, &splash8BPP_COMP_RLE8, 0, 0);
 }
+

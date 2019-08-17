@@ -47,27 +47,72 @@ int main(void)
     // Driving while loop w/ UART controller
     bool gameOver = false;
     bool gameStart = false;
+    bool move = false;
+    int x = 8;
+    int y = 120;
+    Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(&g_sContext, x, y, 3);
+    uint8_t bruh;
     while (!gameOver)
     {
-        if (!gameStart && UARTHasChar(localModuleInstance))
+        if (UARTHasChar(localModuleInstance))
         {
-            if (UARTGetChar(localModuleInstance) == 'h')
+            bruh = UARTGetChar(localModuleInstance);
+        }
+        if (!gameStart)
+        {
+            if (bruh == 'h')
             {
+                bruh = '000';
 
                 consoleHelp(localModuleInstance);
             }
-            if (UARTGetChar(localModuleInstance) == 's')
+            if (bruh == 's')
             {
+                bruh = '000';
                 current = GAME;
                 gameStart = true;
             }
         }
-        if (current == GAME)
+        if (current == GAME && gameStart)
         {
-            if (UARTGetChar(localModuleInstance) == 'h')
+            if (bruh == 'h')
             {
+                bruh = '000';
 
                 consoleHelp_2(localModuleInstance);
+            }
+            if ((bruh == 'w') && y != 8)
+            {
+                bruh = '000';
+                drawGameDisplay(&g_sContext);
+                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+                y = y - 16;
+                Graphics_fillCircle(&g_sContext, x, y, 3);
+            }
+            if ((bruh == 's') && y != 120)
+            {
+                bruh = '000';
+                drawGameDisplay(&g_sContext);
+                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+                y = y + 16;
+                Graphics_fillCircle(&g_sContext, x, y, 3);
+            }
+            if (bruh == 'd' && x != 120)
+            {
+                bruh = '000';
+                drawGameDisplay(&g_sContext);
+                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+                x = x + 16;
+                Graphics_fillCircle(&g_sContext, x, y, 3);
+            }
+            if (bruh == 'a' && x != 8)
+            {
+                bruh = '000';
+                drawGameDisplay(&g_sContext);
+                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+                x = x - 16;
+                Graphics_fillCircle(&g_sContext, x, y, 3);
             }
         }
     }
