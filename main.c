@@ -53,6 +53,7 @@ int main(void)
     Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
     Graphics_fillCircle(&g_sContext, x, y, 3);
     uint8_t bruh;
+    bool maroon = true;
     while (!gameOver)
     {
         if (UARTHasChar(localModuleInstance))
@@ -63,13 +64,13 @@ int main(void)
         {
             if (bruh == 'h')
             {
-                bruh = '000';
+                bruh = '0';
 
                 consoleHelp(localModuleInstance);
             }
             if (bruh == 's')
             {
-                bruh = '000';
+                bruh = '0';
                 current = GAME;
                 gameStart = true;
             }
@@ -78,41 +79,62 @@ int main(void)
         {
             if (bruh == 'h')
             {
-                bruh = '000';
+                bruh = '0';
 
                 consoleHelp_2(localModuleInstance);
             }
             if ((bruh == 'w') && y != 8)
             {
-                bruh = '000';
-                drawGameDisplay(&g_sContext);
+                bruh = '0';
+                // drawGameDisplay(&g_sContext);
+                clear_player(&g_sContext, x, y, maroon);
                 Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
                 y = y - 16;
                 Graphics_fillCircle(&g_sContext, x, y, 3);
+                if (maroon == true)
+                    maroon = false;
+                else
+                    maroon = true;
             }
             if ((bruh == 's') && y != 120)
             {
-                bruh = '000';
-                drawGameDisplay(&g_sContext);
+                bruh = '0';
+                //drawGameDisplay(&g_sContext);
+                clear_player(&g_sContext, x, y, maroon);
                 Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
                 y = y + 16;
                 Graphics_fillCircle(&g_sContext, x, y, 3);
+                if (maroon == true)
+                    maroon = false;
+                else
+                    maroon = true;
             }
             if (bruh == 'd' && x != 120)
             {
-                bruh = '000';
-                drawGameDisplay(&g_sContext);
+                bruh = '0';
+                //drawGameDisplay(&g_sContext);
+                clear_player(&g_sContext, x, y, maroon);
                 Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
                 x = x + 16;
                 Graphics_fillCircle(&g_sContext, x, y, 3);
+                if (maroon == true)
+                    maroon = false;
+                else
+                    maroon = true;
             }
             if (bruh == 'a' && x != 8)
             {
-                bruh = '000';
-                drawGameDisplay(&g_sContext);
+                bruh = '0';
+                //drawGameDisplay(&g_sContext);
+
+                clear_player(&g_sContext, x, y, maroon);
                 Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
                 x = x - 16;
                 Graphics_fillCircle(&g_sContext, x, y, 3);
+                if (maroon == true)
+                    maroon = false;
+                else
+                    maroon = true;
             }
         }
     }
@@ -144,4 +166,17 @@ void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config)
 
     // Initialize and draw game graphics
     initGraphics(g_sContext_p);
+}
+void clear_player(Graphics_Context* g_sContext_p, int x, int y, bool current)
+{
+    if (current == true)
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+    }
+    else
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
+        Graphics_fillCircle(g_sContext_p, x, y, 3);
+    }
 }
