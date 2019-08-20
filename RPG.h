@@ -16,10 +16,12 @@ typedef struct
 {
     // RNG
     counterType randomSeed;
+    unsigned int heroLevel; // Richter's level
+    unsigned int dracLevel; // Dracula's level
 
     // Game data
     gameState state;
-    unsigned int bestScores[HIGH_SCORES];
+    unsigned int bestScores[HIGH_SCORES]; // Keep top three of Richter's level every session
 } RPG;
 
 void initGame(RPG* game);
