@@ -5,6 +5,9 @@
 #include <ti/grlib/grlib.h>
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 
+#define COMMON_FOREGROUND GRAPHICS_COLOR_WHITE
+#define COMMON_BACKGROUND GRAPHICS_COLOR_BLACK
+
 // Bottom edge of rows
 #define r1 16
 #define r2 32
@@ -25,7 +28,9 @@
 #define g 112
 #define h 128
 
-extern Graphics_Image splash8BPP_COMP_RLE8;
+extern Graphics_Image title8BPP_UNCOMP;
+extern Graphics_Image title_logo4BPP_UNCOMP;
+extern Graphics_Image sord4BPP_UNCOMP;
 
 ///
 //  Game initialization
@@ -43,5 +48,20 @@ void drawGameDisplay(Graphics_Context *g_sContext_p);
 
 // Draws the opening splash screen at program start
 void drawOpeningSplash(Graphics_Context *g_sContext_p);
+
+///
+//  Main Menu
+///
+
+void drawMainMenu(Graphics_Context *g_sContext_p);
+void drawMenuCursor(Graphics_Context *g_sContext_p, const int pos);
+void drawHighScores(Graphics_Context *g_sContext_p, const int score1, const int score2, const int score3);
+void drawHelpScreen(Graphics_Context *g_sContext_p);
+
+///
+//  Clearing Operations
+///
+
+void clearScreen(Graphics_Context *g_sContext_p);
 
 #endif

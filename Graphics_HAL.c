@@ -89,8 +89,116 @@ void drawGameDisplay(Graphics_Context *g_sContext_p)
     drawMaroonSquare(g_sContext_p, f, g-1, r7, r8-1);
 }
 
+///
+//  Splash Screens
+///
+
 void drawOpeningSplash(Graphics_Context *g_sContext_p)
 {
-    Graphics_drawImage(g_sContext_p, &splash8BPP_COMP_RLE8, 0, 0);
+    Graphics_drawImage(g_sContext_p, &title8BPP_UNCOMP, 0, 0);
 }
 
+///
+//  Main Menu
+///
+
+void drawMainMenu(Graphics_Context *g_sContext_p)
+{
+    clearScreen(g_sContext_p);
+
+    Graphics_drawImage(g_sContext_p, &title_logo4BPP_UNCOMP, 4, 0);
+    int8_t playOption[30] = "Begin Quest! ";
+    int8_t infoOption[30] = "How to Play ";
+    int8_t highOption[30] = "Top Levels ";
+    int8_t copyright[30] = "Just Monika 2019";
+
+    Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 10, 55);
+
+    Graphics_drawString(g_sContext_p, playOption, -1, 30, 55, true);
+    Graphics_drawString(g_sContext_p, highOption, -1, 30, 75, true);
+    Graphics_drawString(g_sContext_p, infoOption, -1, 30, 95, true);
+    Graphics_drawString(g_sContext_p, copyright, -1, 0, 115, true);
+}
+
+void drawMenuCursor(Graphics_Context *g_sContext_p, const int cursor)
+{
+    // Erase previous cursors
+    Graphics_Rectangle eraseCursor;
+    eraseCursor.xMin = 10;
+    eraseCursor.xMax = 30;
+    eraseCursor.yMin = 55;
+    eraseCursor.yMax = 105;
+
+    Graphics_setForegroundColor(g_sContext_p, COMMON_BACKGROUND);
+    Graphics_fillRectangle(g_sContext_p, &eraseCursor);
+    Graphics_setForegroundColor(g_sContext_p, COMMON_FOREGROUND);
+
+    // Draw new cursor
+    switch(cursor)
+    {
+    case 0:
+        Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 10, 55);
+        break;
+    case 1:
+        Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 10, 75);
+        break;
+    case 2:
+        Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 10, 95);
+        break;
+    }
+}
+void drawHighScores(Graphics_Context *g_sContext_p, const int score1, const int score2, const int score3)
+{
+    clearScreen(g_sContext_p);
+
+    int8_t first[3];
+    int8_t second[3];
+    int8_t third[3];
+
+    int8_t info[30] = "Hall of Heroes ";
+
+    first[1] = (score1 % 10) + '0';
+    first[0] = (score1 / 10) + '0';
+
+    second[1] = (score2 % 10) + '0';
+    second[0] = (score2 / 10) + '0';
+
+    third[1] = (score3 % 10) + '0';
+    third[0] = (score3 / 10) + '0';
+
+    Graphics_drawString(g_sContext_p, info, -1, 5, 5, true);
+    Graphics_drawString(g_sContext_p, first, -1, 30, 50, true);
+    Graphics_drawString(g_sContext_p, second, -1, 30, 70, true);
+    Graphics_drawString(g_sContext_p, third, -1, 30, 90, true);
+}
+void drawHelpScreen(Graphics_Context *g_sContext_p)
+{
+    clearScreen(g_sContext_p);
+
+    int8_t line0[30] = "How to Play:";
+    int8_t line1[30] = "Help text in";
+    int8_t line2[30] = "UART console";
+    int8_t line3[30] = "";
+    int8_t line4[30] = "Press key 1:";
+    int8_t line5[30] = "Dungeon help";
+    int8_t line6[30] = "Press key 2:";
+    int8_t line7[30] = "Battle help";
+
+    Graphics_drawString(g_sContext_p, line0, -1, 20, 0, true);
+    Graphics_drawString(g_sContext_p, line1, -1, 0, 15, true);
+    Graphics_drawString(g_sContext_p, line2, -1, 0, 25, true);
+    Graphics_drawString(g_sContext_p, line3, -1, 0, 35, true);
+    Graphics_drawString(g_sContext_p, line4, -1, 0, 45, true);
+    Graphics_drawString(g_sContext_p, line5, -1, 0, 55, true);
+    Graphics_drawString(g_sContext_p, line6, -1, 0, 75, true);
+    Graphics_drawString(g_sContext_p, line7, -1, 0, 85, true);
+}
+
+///
+//  Clearing Operations
+///
+
+void clearScreen(Graphics_Context *g_sContext_p)
+{
+    Graphics_clearDisplay(g_sContext_p);
+}

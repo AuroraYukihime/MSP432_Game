@@ -17,6 +17,8 @@ typedef struct {
     uint32_t interruptNumber;
 } HWTimer_t;
 
+HWTimer_t timer0, timer1;
+
 typedef struct {
     HWTimer_t   *hwtimer_p;             // hardware timer used as basis for this software timer
     uint32_t    waitCycles;             // wait "cycles" for the software timer
