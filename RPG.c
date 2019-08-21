@@ -7,6 +7,11 @@ void initGame(RPG* game)
     game->heroLevel = 1;
     game->dracLevel = 1;
 
+    // Set Richter's default position
+    game->richterPos.x = 12;
+    game->richterPos.y = 12;
+    game->richterPos.maroon = false;
+
     // Set high scores to 0
     game->bestScores[0] = 0;
     game->bestScores[1] = 0;

@@ -66,6 +66,6 @@ void UARTPutChar(uint32_t moduleInstance, uint8_t tChar);
 void consoleIntro(uint32_t moduleInstance);
 
 // Displays instructions and controls to UART console
-void consoleHelp(uint32_t moduleInstance);
-void consoleHelp_2(uint32_t moduleInstance);
+void consoleHelpDungeon(uint32_t moduleInstance);
+void consoleHelpBattle(uint32_t moduleInstance);
 #endif

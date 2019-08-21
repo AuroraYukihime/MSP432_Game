@@ -26,69 +26,6 @@ void initGraphics(Graphics_Context *g_sContext_p)
     //drawGameDisplay(g_sContext_p);
 }
 
-void drawMaroonSquare(Graphics_Context* g_sContext_p, unsigned int xMin, unsigned int xMax, unsigned int yMin, unsigned int yMax)
-{
-    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
-    Graphics_Rectangle maroon;
-        maroon.xMin = xMin;
-        maroon.xMax = xMax;
-        maroon.yMin = yMin;
-        maroon.yMax = yMax;
-    Graphics_fillRectangle(g_sContext_p, &maroon);
-}
-
-void drawGameDisplay(Graphics_Context *g_sContext_p)
-{
-    // Orange squares are easy - just fill the screen with an orange rectangle
-    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
-    Graphics_Rectangle orangeSquares;
-        orangeSquares.xMin = 0;
-        orangeSquares.xMax = 127;
-        orangeSquares.yMin = 0;
-        orangeSquares.yMax = 127;
-    Graphics_fillRectangle(g_sContext_p, &orangeSquares);
-
-    drawMaroonSquare(g_sContext_p, a, b - 1, 0, r1-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, 0, r1-1);
-    drawMaroonSquare(g_sContext_p, e, f-1, 0, r1-1);
-    drawMaroonSquare(g_sContext_p, g, h-1, 0, r1-1);
-
-    drawMaroonSquare(g_sContext_p, 0, a-1, r1, r2-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r1, r2-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r1, r2-1);
-    drawMaroonSquare(g_sContext_p, f, g-1, r1, r2-1);
-
-    drawMaroonSquare(g_sContext_p, a, b - 1, r2, r3-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, r2, r3-1);
-    drawMaroonSquare(g_sContext_p, e, f-1, r2, r3-1);
-    drawMaroonSquare(g_sContext_p, g, h-1, r2, r3-1);
-
-    drawMaroonSquare(g_sContext_p, 0, a-1, r3, r4-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r3, r4-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r3, r4-1);
-    drawMaroonSquare(g_sContext_p, f, g-1, r3, r4-1);
-
-    drawMaroonSquare(g_sContext_p, a, b - 1, r4, r5-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, r4, r5-1);
-    drawMaroonSquare(g_sContext_p, e, f-1, r4, r5-1);
-    drawMaroonSquare(g_sContext_p, g, h-1, r4, r5-1);
-
-    drawMaroonSquare(g_sContext_p, 0, a-1, r5, r6-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r5, r6-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r5, r6-1);
-    drawMaroonSquare(g_sContext_p, f, g-1, r5, r6-1);
-
-    drawMaroonSquare(g_sContext_p, a, b - 1, r6, r7-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, r6, r7-1);
-    drawMaroonSquare(g_sContext_p, e, f-1, r6, r7-1);
-    drawMaroonSquare(g_sContext_p, g, h-1, r6, r7-1);
-
-    drawMaroonSquare(g_sContext_p, 0, a-1, r7, r8-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r7, r8-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r7, r8-1);
-    drawMaroonSquare(g_sContext_p, f, g-1, r7, r8-1);
-}
-
 ///
 //  Splash Screens
 ///
@@ -192,6 +129,132 @@ void drawHelpScreen(Graphics_Context *g_sContext_p)
     Graphics_drawString(g_sContext_p, line5, -1, 0, 55, true);
     Graphics_drawString(g_sContext_p, line6, -1, 0, 75, true);
     Graphics_drawString(g_sContext_p, line7, -1, 0, 85, true);
+}
+
+///
+//  Dungeon Screen
+///
+
+void drawMaroonSquare(Graphics_Context* g_sContext_p, unsigned int xMin, unsigned int xMax, unsigned int yMin, unsigned int yMax)
+{
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
+    Graphics_Rectangle maroon;
+        maroon.xMin = xMin;
+        maroon.xMax = xMax;
+        maroon.yMin = yMin;
+        maroon.yMax = yMax;
+    Graphics_fillRectangle(g_sContext_p, &maroon);
+}
+
+void drawDungeonDisplay(Graphics_Context *g_sContext_p, boardPosition richterPos)
+{
+    clearScreen(g_sContext_p);
+
+    // Orange squares are easy - just fill the screen with an orange rectangle
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
+    Graphics_Rectangle orangeSquares;
+        orangeSquares.xMin = 0;
+        orangeSquares.xMax = 124;
+        orangeSquares.yMin = 0;
+        orangeSquares.yMax = 124;
+    Graphics_fillRectangle(g_sContext_p, &orangeSquares);
+
+    // Draw row 1
+    drawMaroonSquare(g_sContext_p, a, b-1, 0, r1-1);
+    drawMaroonSquare(g_sContext_p, c, d-1, 0, r1-1);
+
+    // Draw row 2
+    drawMaroonSquare(g_sContext_p, 0, a-1, r1, r2-1);
+    drawMaroonSquare(g_sContext_p, b, c-1, r1, r2-1);
+    drawMaroonSquare(g_sContext_p, d, e-1, r1, r2-1);
+
+    // Draw row 3
+    drawMaroonSquare(g_sContext_p, a, b-1, r2, r3-1);
+    drawMaroonSquare(g_sContext_p, c, d-1, r2, r3-1);
+
+    // Draw row 4
+    drawMaroonSquare(g_sContext_p, 0, a-1, r3, r4-1);
+    drawMaroonSquare(g_sContext_p, b, c-1, r3, r4-1);
+    drawMaroonSquare(g_sContext_p, d, e-1, r3, r4-1);
+
+    // Draw row 5
+    drawMaroonSquare(g_sContext_p, a, b-1, r4, r5-1);
+    drawMaroonSquare(g_sContext_p, c, d-1, r4, r5-1);
+
+    // Draw Richter position
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, richterPos.x, richterPos.y, 5);
+}
+
+// Helper function - Clears player marker from Dungeon grid
+void clear_player(Graphics_Context* g_sContext_p, int x, int y, bool current)
+{
+    if (current == true)
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
+        Graphics_fillCircle(g_sContext_p, x, y, 5);
+    }
+    else
+    {
+        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
+        Graphics_fillCircle(g_sContext_p, x, y, 5);
+    }
+}
+
+void moveRichterUp(Graphics_Context *g_sContext_p, boardPosition *richterPos)
+{
+    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+
+    richterPos->y -= 25;
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, richterPos->x, richterPos->y, 5);
+
+    if (richterPos->maroon)
+        richterPos->maroon = false;
+    else
+        richterPos->maroon = true;
+}
+
+void moveRichterDown(Graphics_Context *g_sContext_p, boardPosition *richterPos)
+{
+    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+
+    richterPos->y += 25;
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, richterPos->x, richterPos->y, 5);
+
+    if (richterPos->maroon)
+        richterPos->maroon = false;
+    else
+        richterPos->maroon = true;
+}
+
+void moveRichterLeft(Graphics_Context *g_sContext_p, boardPosition *richterPos)
+{
+    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+
+    richterPos->x -= 25;
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, richterPos->x, richterPos->y, 5);
+
+    if (richterPos->maroon)
+        richterPos->maroon = false;
+    else
+        richterPos->maroon = true;
+}
+
+void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos)
+{
+    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+
+    richterPos->x += 25;
+    Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
+    Graphics_fillCircle(g_sContext_p, richterPos->x, richterPos->y, 5);
+
+    if (richterPos->maroon)
+        richterPos->maroon = false;
+    else
+        richterPos->maroon = true;
 }
 
 ///

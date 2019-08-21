@@ -118,9 +118,7 @@ void writeString(uint32_t moduleInstance, string_t string, unsigned int size)
 }
 
 #define intro1Size 22
-#define intro2Size 28
-#define intro3size 39
-#define intro4size 46
+#define intro2Size 24
 void consoleIntro(uint32_t moduleInstance)
 {
     string_t string;
@@ -128,37 +126,30 @@ void consoleIntro(uint32_t moduleInstance)
     string.string = "Just Monika Presents\r\n";
     writeString(moduleInstance, string, intro1Size);
 
-    string.string = "Placeholder RPG for MSP432\r\n";
+    string.string = "Castlevania for MSP432\r\n";
     writeString(moduleInstance, string, intro2Size);
-
-    string.string = "Press h for instructions and controls\r\n";
-    writeString(moduleInstance, string, intro3size);
-
-    string.string = "Otherwise press any other key for game start\r\n";
-    writeString(moduleInstance, string, intro4size);
 
     string.string = "\n";
     writeString(moduleInstance, string, spacerSize);
 }
 
-#define help1Size 26
-#define help2Size 62
-#define help3Size 59
+#define help1Size 57
+#define help2Size 64
+#define help3Size 61
 #define help4Size 50
-#define help5Size 63
-void consoleHelp(uint32_t moduleInstance)
+void consoleHelpDungeon(uint32_t moduleInstance)
 {
     string_t string;
 
-    string.string = "Player 1 is on 9600bps.\r\n";
+    string.string = "Player 1 uses Boosterpack controls or UART at 9600 BPS.\r\n";
     writeString(moduleInstance, string, help1Size);
 
     string.string =
-            "Move using joystick. Keep moving until you find the monster.\r\n";
+            "Move using joystick or WASD (UART) until you find the monster.\r\n";
     writeString(moduleInstance, string, help2Size);
 
     string.string =
-            "Get to the same square as the monster to iniate a battle.\r\n";
+            "Get to the same square as the monster to initiate a battle.\r\n";
     writeString(moduleInstance, string, help3Size);
 
     string.string = "Reference manual for additional rules in effect.\r\n";
@@ -167,7 +158,8 @@ void consoleHelp(uint32_t moduleInstance)
     string.string = "\n";
     writeString(moduleInstance, string, spacerSize);
 }
-void consoleHelp_2(uint32_t moduleInstance)
+
+void consoleHelpBattle(uint32_t moduleInstance)
 {
     string_t string;
 

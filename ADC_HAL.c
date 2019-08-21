@@ -108,6 +108,43 @@ bool debouncedJoystickPushUp(unsigned y)
     return returnStatus;
 }
 
+bool debouncedJoystickPushRight(unsigned x)
+{
+    // Subactive = Joystick is not past the threshold.
+    // Active = Joystick was subactive last cycle and is past the right threshold now!
+    // Saturation = Joystick is held past the threshold, but will return false as per project spec.
+    static enum {Subactive, Active, Saturation} state;
+
+    bool returnStatus = false;
+
+    switch(state)
+    {
+    case Subactive:
+        if (x >= RIGHT_THRESHOLD)
+        {
+            state = Active;
+        }
+        break;
+    case Active:
+        if (x >= RIGHT_CENTER)
+        {
+            state = Saturation;
+        }
+        else state = Subactive;
+
+        break;
+    case Saturation:
+        if (x <= RIGHT_CENTER)
+        {
+            state = Subactive;
+            returnStatus = true;
+        }
+        break;
+    }
+
+    return returnStatus;
+}
+
 bool debouncedJoystickPushDown(unsigned y)
 {
     // Subactive = Joystick is not past the threshold.
@@ -145,6 +182,42 @@ bool debouncedJoystickPushDown(unsigned y)
     return returnStatus;
 }
 
+bool debouncedJoystickPushLeft(unsigned x)
+{
+    // Subactive = Joystick is not past the threshold.
+    // Active = Joystick was subactive last cycle and is past the right threshold now!
+    // Saturation = Joystick is held past the threshold, but will return false as per project spec.
+    static enum {Subactive, Active, Saturation} state;
+
+    bool returnStatus = false;
+
+    switch(state)
+    {
+    case Subactive:
+        if (x <= LEFT_THRESHOLD)
+        {
+            state = Active;
+        }
+        break;
+    case Active:
+        if (x <= LEFT_CENTER)
+        {
+            state = Saturation;
+        }
+        else state = Subactive;
+
+        break;
+    case Saturation:
+        if (x >= LEFT_CENTER)
+        {
+            state = Subactive;
+            returnStatus = true;
+        }
+        break;
+    }
+
+    return returnStatus;
+}
 
 // Helper to setupRandom
 // Returns the toggle (XOR) of raw vx and vy joystick input

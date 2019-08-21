@@ -4,9 +4,9 @@
 #include "Graphics_HAL.h" // need bool plz
 
 #define DOWN_THRESHOLD    1000
-#define LEFT_THRESHOLD  0x0500
+#define LEFT_THRESHOLD    1000
 #define UP_THRESHOLD     15000
-#define RIGHT_THRESHOLD 0x3500
+#define RIGHT_THRESHOLD  15000
 
 #define UP_HIGH          14000
 #define UP_MID           11000
@@ -50,6 +50,8 @@ void getSampleJoyStick(unsigned *X, unsigned *Y);
 // Outputs: Returns true if joystick is tapped (not held) up/down. Will only return true once per entry/exit past the threshold.
 bool debouncedJoystickPushUp(unsigned y);
 bool debouncedJoystickPushDown(unsigned y);
+bool debouncedJoystickPushLeft(unsigned x);
+bool debouncedJoystickPushRight(unsigned x);
 
 void setupRandom(counterType* counter, unsigned x, unsigned y);
 unsigned int generateRandom(counterType * counter, unsigned x, unsigned y);

@@ -15,16 +15,16 @@
 ///
 
 // Initializes the UART module
-void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config, RPG* game);
+void initialize(RPG* game);
 
 // Draws the splash screen while blocking for three seconds
 void splashScreen(Graphics_Context* g_sContext_p);
 
 // Main menu - options to start game, high scores, and instructions
-void mainMenu(Graphics_Context* g_sContext_p, RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy);
+void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy);
 
-// TBD
-void clear_player(Graphics_Context* g_sContext_p, int x, int y, bool current);
+// Driving while for the Dungeon Screen
+void dungeonController(RPG* game, unsigned vx, unsigned vy);
 
 ///
 //  Main Function
@@ -34,124 +34,29 @@ int main(void)
 {
     // Initialize board and game
     RPG game;
-    Graphics_Context g_sContext;
-    eUSCI_UART_Config UART_Config = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    initialize(&g_sContext, UART_Config, &game);
-
     button_t BoosterpackJoystickSelect = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, &timer0};
+    initialize(&game);
 
     // vx and vy catch the joystick's 0th x-pos and y-pos bits
     unsigned vx = 0;
     unsigned vy = 0;
 
-    // Draw opening splash
-    splashScreen(&g_sContext);
+    // Opening splash screen. Blocks for three seconds.
+    splashScreen(&game.g_sContext);
 
-    mainMenu(&g_sContext, &game, &BoosterpackJoystickSelect, vx, vy);
+    // Main menu. Function contains a blocking while.
+    mainMenu(&game, &BoosterpackJoystickSelect, vx, vy);
 
-    Graphics_clearDisplay(&g_sContext);
-    drawGameDisplay(&g_sContext);
-
-    // Driving while loop w/ UART controller
-    bool gameOver = false;
-    bool gameStart = false;
-    int x = 8;
-    int y = 120;
-    Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-    Graphics_fillCircle(&g_sContext, x, y, 3);
-    uint8_t bruh;
-    bool maroon = true;
-    while (!gameOver)
-    {
-        if (UARTHasChar(localModuleInstance))
-        {
-            bruh = UARTGetChar(localModuleInstance);
-        }
-        if (!gameStart)
-        {
-            if (bruh == 'h')
-            {
-                bruh = '0';
-
-                consoleHelp(localModuleInstance);
-            }
-            if (bruh == 's')
-            {
-                bruh = '0';
-                game.state = Dungeon;
-                gameStart = true;
-            }
-        }
-        if (game.state == Dungeon && gameStart)
-        {
-            if (bruh == 'h')
-            {
-                bruh = '0';
-
-                consoleHelp_2(localModuleInstance);
-            }
-            if ((bruh == 'w') && y != 8)
-            {
-                bruh = '0';
-                // drawGameDisplay(&g_sContext);
-                clear_player(&g_sContext, x, y, maroon);
-                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-                y = y - 16;
-                Graphics_fillCircle(&g_sContext, x, y, 3);
-                if (maroon == true)
-                    maroon = false;
-                else
-                    maroon = true;
-            }
-            if ((bruh == 's') && y != 120)
-            {
-                bruh = '0';
-                //drawGameDisplay(&g_sContext);
-                clear_player(&g_sContext, x, y, maroon);
-                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-                y = y + 16;
-                Graphics_fillCircle(&g_sContext, x, y, 3);
-                if (maroon == true)
-                    maroon = false;
-                else
-                    maroon = true;
-            }
-            if (bruh == 'd' && x != 120)
-            {
-                bruh = '0';
-                //drawGameDisplay(&g_sContext);
-                clear_player(&g_sContext, x, y, maroon);
-                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-                x = x + 16;
-                Graphics_fillCircle(&g_sContext, x, y, 3);
-                if (maroon == true)
-                    maroon = false;
-                else
-                    maroon = true;
-            }
-            if (bruh == 'a' && x != 8)
-            {
-                bruh = '0';
-                //drawGameDisplay(&g_sContext);
-
-                clear_player(&g_sContext, x, y, maroon);
-                Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-                x = x - 16;
-                Graphics_fillCircle(&g_sContext, x, y, 3);
-                if (maroon == true)
-                    maroon = false;
-                else
-                    maroon = true;
-            }
-        }
-    }
+    // Display the Dungeon screen
+    drawDungeonDisplay(&game.g_sContext, game.richterPos);
+    dungeonController(&game, vx, vy);
 }
 
 ///
 //  Auxillary Functions
 ///
 
-void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config, RPG* game)
+void initialize(RPG* game)
 {
     // Stop the Watchdog Timer
     WDT_A_hold(WDT_A_BASE);
@@ -159,6 +64,8 @@ void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config, R
     // Initialize the Hardware Timers
     initHWTimer0();
     initHWTimer1();
+
+    eUSCI_UART_Config UART_Config = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // Configure UART to 9600bps for 48MHz clock and initialize
     UART_Config.selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK; // SMCLK Clock Source = 48MHz
@@ -185,7 +92,7 @@ void initialize(Graphics_Context* g_sContext_p, eUSCI_UART_Config UART_Config, R
     consoleIntro(localModuleInstance);
 
     // Initialize and draw game graphics
-    initGraphics(g_sContext_p);
+    initGraphics(&game->g_sContext);
 
     // Initialize game
     initGame(game);
@@ -204,82 +111,153 @@ void splashScreen(Graphics_Context* g_sContext_p)
 
 #define OPTION1 0
 #define OPTION3 2
-void mainMenu(Graphics_Context* g_sContext_p, RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy)
+void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy)
 {
-Restart:;
     int menuCursor = OPTION1;
     bool scoresBlock = false;
     bool helpBlock = false;
-
-    drawMainMenu(g_sContext_p);
+    uint8_t inputChar = '0';
+    drawMainMenu(&game->g_sContext);
 
     while(true)
     {
         // Calculate RNG - might as well make use of this time~
         setupRandom(&game->randomSeed, vx, vy);
 
+        // Discard characters
+        if (UARTHasChar(localModuleInstance))
+        {
+            UARTGetChar(localModuleInstance);
+        }
+
         // Block when in scores or instructions menu
-        if (scoresBlock || helpBlock)
+        if (scoresBlock)
         {
             bool breakout = false;
+
             while(!breakout)
             {
                 breakout = ButtonPushed(BoosterpackJoystickSelect);
             }
-            // Restart menu
-            goto Restart;
+
+            // Recursive call returns to menu
+            mainMenu(game, BoosterpackJoystickSelect, vx, vy);
         }
 
-        getSampleJoyStick(&vx, &vy);
-
-        // Move cursor if not on first or last option, depending on position
-        if(debouncedJoystickPushUp(vy) && menuCursor != OPTION1)
+        else if (helpBlock)
         {
-            menuCursor--;
-            drawMenuCursor(g_sContext_p, menuCursor);
+            bool breakout = false;
 
-        }
-        else if(debouncedJoystickPushDown(vy) && menuCursor != OPTION3)
-        {
-            menuCursor++;
-            drawMenuCursor(g_sContext_p, menuCursor);
-        }
-
-        if (ButtonPushed(BoosterpackJoystickSelect))
-        {
-            // Play the game!
-            if (menuCursor == OPTION1)
+            while(!breakout)
             {
-                return;
+                if (UARTHasChar(localModuleInstance))
+                {
+                    inputChar = UARTGetChar(localModuleInstance);
+                    if (inputChar == '1')
+                    {
+                        consoleHelpDungeon(localModuleInstance);
+                    }
+                    else if (inputChar == '2')
+                    {
+                        consoleHelpBattle(localModuleInstance);
+                    }
+                }
+
+                breakout = ButtonPushed(BoosterpackJoystickSelect);
             }
 
-            // How to Play menu
-            else if (menuCursor == OPTION3)
+            // Recursive call returns to menu
+            mainMenu(game, BoosterpackJoystickSelect, vx, vy);
+        }
+        else
+        {
+            getSampleJoyStick(&vx, &vy);
+
+            // Move cursor if not on first or last option, depending on position
+            if(debouncedJoystickPushUp(vy) && menuCursor != OPTION1)
             {
-                drawHelpScreen(g_sContext_p);
-                helpBlock = true;
+                menuCursor--;
+                drawMenuCursor(&game->g_sContext, menuCursor);
+
+            }
+            else if(debouncedJoystickPushDown(vy) && menuCursor != OPTION3)
+            {
+                menuCursor++;
+                drawMenuCursor(&game->g_sContext, menuCursor);
             }
 
-            // View high scores
-            else
+            if (ButtonPushed(BoosterpackJoystickSelect))
             {
-                drawHighScores(g_sContext_p, game->bestScores[0], game->bestScores[1], game->bestScores[2]);
-                scoresBlock = true;
+                // Play the game!
+                if (menuCursor == OPTION1)
+                {
+                    game->state = Dungeon;
+                    return;
+                }
+
+                // How to Play menu
+                else if (menuCursor == OPTION3)
+                {
+                    drawHelpScreen(&game->g_sContext);
+                    helpBlock = true;
+                }
+
+                // View high scores
+                else
+                {
+                    drawHighScores(&game->g_sContext, game->bestScores[0], game->bestScores[1], game->bestScores[2]);
+                    scoresBlock = true;
+                }
             }
         }
     }
 }
 
-void clear_player(Graphics_Context* g_sContext_p, int x, int y, bool current)
+void dungeonController(RPG* game, unsigned vx, unsigned vy)
 {
-    if (current == true)
+    bool gameOver = false;
+    uint8_t inputChar;
+    while (!gameOver)
     {
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
-        Graphics_fillCircle(g_sContext_p, x, y, 3);
-    }
-    else
-    {
-        Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
-        Graphics_fillCircle(g_sContext_p, x, y, 3);
+        getSampleJoyStick(&vx, &vy);
+
+        bool up    = (inputChar == 'w') || debouncedJoystickPushUp(vy);
+        bool down  = (inputChar == 's') || debouncedJoystickPushDown(vy);
+        bool right = (inputChar == 'd') || debouncedJoystickPushRight(vx);
+        bool left  = (inputChar == 'a') || debouncedJoystickPushLeft(vx);
+
+        // TODO: Move to UART Controller function
+        if (UARTHasChar(localModuleInstance))
+        {
+            inputChar = UARTGetChar(localModuleInstance);
+        }
+
+        if (game->state == Dungeon)
+        {
+            if ( up && game->richterPos.y != 12)
+            {
+                inputChar = '0';
+
+                moveRichterUp(&game->g_sContext, &game->richterPos);
+            }
+            if ( down && game->richterPos.y != 112)
+            {
+                inputChar = '0';
+
+                moveRichterDown(&game->g_sContext, &game->richterPos);
+            }
+            if ( right && game->richterPos.x != 112)
+            {
+                inputChar = '0';
+
+                moveRichterRight(&game->g_sContext, &game->richterPos);
+            }
+            if ( left && game->richterPos.x != 12)
+            {
+                inputChar = '0';
+
+                moveRichterLeft(&game->g_sContext, &game->richterPos);
+            }
+        }
     }
 }
