@@ -213,6 +213,8 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsig
     }
 }
 
+#define UpLeftEdge 12
+#define DownRightEdge 112
 void dungeonController(RPG* game, unsigned vx, unsigned vy)
 {
     bool gameOver = false;
@@ -234,25 +236,25 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy)
 
         if (game->state == Dungeon)
         {
-            if ( up && game->richterPos.y != 12)
+            if ( up && game->richterPos.y != UpLeftEdge)
             {
                 inputChar = '0';
 
                 moveRichterUp(&game->g_sContext, &game->richterPos);
             }
-            if ( down && game->richterPos.y != 112)
+            if ( down && game->richterPos.y != DownRightEdge)
             {
                 inputChar = '0';
 
                 moveRichterDown(&game->g_sContext, &game->richterPos);
             }
-            if ( right && game->richterPos.x != 112)
+            if ( right && game->richterPos.x != DownRightEdge)
             {
                 inputChar = '0';
 
                 moveRichterRight(&game->g_sContext, &game->richterPos);
             }
-            if ( left && game->richterPos.x != 12)
+            if ( left && game->richterPos.x != UpLeftEdge)
             {
                 inputChar = '0';
 
