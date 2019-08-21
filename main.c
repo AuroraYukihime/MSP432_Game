@@ -113,6 +113,7 @@ void splashScreen(Graphics_Context* g_sContext_p)
 #define OPTION3 2
 void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy)
 {
+Restart:;
     int menuCursor = OPTION1;
     bool scoresBlock = false;
     bool helpBlock = false;
@@ -140,8 +141,7 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsig
                 breakout = ButtonPushed(BoosterpackJoystickSelect);
             }
 
-            // Recursive call returns to menu
-            mainMenu(game, BoosterpackJoystickSelect, vx, vy);
+            goto Restart;
         }
 
         else if (helpBlock)
@@ -166,8 +166,7 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsig
                 breakout = ButtonPushed(BoosterpackJoystickSelect);
             }
 
-            // Recursive call returns to menu
-            mainMenu(game, BoosterpackJoystickSelect, vx, vy);
+            goto Restart;
         }
         else
         {
