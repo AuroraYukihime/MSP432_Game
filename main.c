@@ -21,10 +21,13 @@ void initialize(RPG* game);
 void splashScreen(Graphics_Context* g_sContext_p);
 
 // Main menu - options to start game, high scores, and instructions
-void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy);
+void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
+              unsigned vy);
 
 // Driving while for the Dungeon Screen
-void dungeonController(RPG* game, unsigned vx, unsigned vy);
+void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
+                       int monster_y, int fire_x, int fire_y, int water_x,
+                       int water_y);
 
 ///
 //  Main Function
@@ -34,7 +37,8 @@ int main(void)
 {
     // Initialize board and game
     RPG game;
-    button_t BoosterpackJoystickSelect = {GPIO_PORT_P4, GPIO_PIN1, Stable_R, RELEASED_STATE, &timer0};
+    button_t BoosterpackJoystickSelect = { GPIO_PORT_P4, GPIO_PIN1, Stable_R,
+                                           RELEASED_STATE, &timer0 };
     initialize(&game);
 
     // vx and vy catch the joystick's 0th x-pos and y-pos bits
@@ -46,10 +50,72 @@ int main(void)
 
     // Main menu. Function contains a blocking while.
     mainMenu(&game, &BoosterpackJoystickSelect, vx, vy);
+    getSampleJoyStick(&vx, &vy);
 
     // Display the Dungeon screen
+
     drawDungeonDisplay(&game.g_sContext, game.richterPos);
-    dungeonController(&game, vx, vy);
+    getSampleJoyStick(&vx, &vy);
+    vx = vx % 5;
+    vy = vy % 5;
+    vx = 12 + vx * 25;
+    vy = 12 + vy * 25;
+    if (vx == 12 && vy == 12)
+    {
+        vx = 24;
+        vy = 24;
+    }
+    Graphics_setForegroundColor(&game.g_sContext, GRAPHICS_COLOR_GREEN);
+    Graphics_fillCircle(&game.g_sContext, vx, vy, 5);
+    int monster_x = vx;
+    int monster_y = vy;
+    getSampleJoyStick(&vx, &vy);
+    vx = vx % 5;
+    vy = vy % 5;
+    vx = 12 + vx * 25;
+    vy = 12 + vy * 25;
+    if (vx == 12 && vy == 12)
+    {
+        vx = 37;
+        vy = 37;
+    }
+    if (vx == monster_x && vy == monster_y)
+    {
+        vx = vx + 25;
+        vy = vy + 25;
+    }
+    Graphics_setForegroundColor(&game.g_sContext, GRAPHICS_COLOR_BLUE);
+    Graphics_fillCircle(&game.g_sContext, vx, vy, 5);
+    int water_x = vx;
+    int water_y = vy;
+    getSampleJoyStick(&vx, &vy);
+    vx = vx % 5;
+    vy = vy % 5;
+    vx = 12 + vx * 25;
+    vy = 12 + vy * 25;
+    if (vx == 12 && vy == 12)
+    {
+        vx = 37;
+        vy = 37;
+    }
+    if (vx == monster_x && vy == monster_y)
+    {
+        vx = vx + 25;
+        vy = vy + 25;
+    }
+    if (vx == water_x && vy == water_y)
+    {
+        vx = vx + 25;
+        vy = vy + 25;
+    }
+    int fire_x = vx;
+    int fire_y = vy;
+    Graphics_setForegroundColor(&game.g_sContext, GRAPHICS_COLOR_RED);
+    Graphics_fillCircle(&game.g_sContext, vx, vy, 5);
+
+    dungeonController(&game, vx, vy, monster_x, monster_y, water_x, water_y,
+                      fire_x, fire_y);
+
 }
 
 ///
@@ -111,16 +177,16 @@ void splashScreen(Graphics_Context* g_sContext_p)
 
 #define OPTION1 0
 #define OPTION3 2
-void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx, unsigned vy)
+void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
+              unsigned vy)
 {
-Restart:;
+    Restart: ;
     int menuCursor = OPTION1;
     bool scoresBlock = false;
     bool helpBlock = false;
     uint8_t inputChar = '0';
     drawMainMenu(&game->g_sContext);
-
-    while(true)
+    while (true)
     {
         // Calculate RNG - might as well make use of this time~
         setupRandom(&game->randomSeed, vx, vy);
@@ -136,7 +202,7 @@ Restart:;
         {
             bool breakout = false;
 
-            while(!breakout)
+            while (!breakout)
             {
                 breakout = ButtonPushed(BoosterpackJoystickSelect);
             }
@@ -148,7 +214,7 @@ Restart:;
         {
             bool breakout = false;
 
-            while(!breakout)
+            while (!breakout)
             {
                 if (UARTHasChar(localModuleInstance))
                 {
@@ -173,13 +239,13 @@ Restart:;
             getSampleJoyStick(&vx, &vy);
 
             // Move cursor if not on first or last option, depending on position
-            if(debouncedJoystickPushUp(vy) && menuCursor != OPTION1)
+            if (debouncedJoystickPushUp(vy) && menuCursor != OPTION1)
             {
                 menuCursor--;
                 drawMenuCursor(&game->g_sContext, menuCursor);
 
             }
-            else if(debouncedJoystickPushDown(vy) && menuCursor != OPTION3)
+            else if (debouncedJoystickPushDown(vy) && menuCursor != OPTION3)
             {
                 menuCursor++;
                 drawMenuCursor(&game->g_sContext, menuCursor);
@@ -204,7 +270,8 @@ Restart:;
                 // View high scores
                 else
                 {
-                    drawHighScores(&game->g_sContext, game->bestScores[0], game->bestScores[1], game->bestScores[2]);
+                    drawHighScores(&game->g_sContext, game->bestScores[0],
+                                   game->bestScores[1], game->bestScores[2]);
                     scoresBlock = true;
                 }
             }
@@ -214,18 +281,22 @@ Restart:;
 
 #define UpLeftEdge 12
 #define DownRightEdge 112
-void dungeonController(RPG* game, unsigned vx, unsigned vy)
+void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
+                       int monster_y, int fire_x, int fire_y, int water_x,
+                       int water_y)
 {
     bool gameOver = false;
     uint8_t inputChar;
+    bool fire = false;
+    bool water = false;
     while (!gameOver)
     {
         getSampleJoyStick(&vx, &vy);
 
-        bool up    = (inputChar == 'w') || debouncedJoystickPushUp(vy);
-        bool down  = (inputChar == 's') || debouncedJoystickPushDown(vy);
+        bool up = (inputChar == 'w') || debouncedJoystickPushUp(vy);
+        bool down = (inputChar == 's') || debouncedJoystickPushDown(vy);
         bool right = (inputChar == 'd') || debouncedJoystickPushRight(vx);
-        bool left  = (inputChar == 'a') || debouncedJoystickPushLeft(vx);
+        bool left = (inputChar == 'a') || debouncedJoystickPushLeft(vx);
 
         // TODO: Move to UART Controller function
         if (UARTHasChar(localModuleInstance))
@@ -235,30 +306,34 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy)
 
         if (game->state == Dungeon)
         {
-            if ( up && game->richterPos.y != UpLeftEdge)
+            if (up && game->richterPos.y != UpLeftEdge)
             {
                 inputChar = '0';
 
                 moveRichterUp(&game->g_sContext, &game->richterPos);
             }
-            if ( down && game->richterPos.y != DownRightEdge)
+            if (down && game->richterPos.y != DownRightEdge)
             {
                 inputChar = '0';
 
                 moveRichterDown(&game->g_sContext, &game->richterPos);
             }
-            if ( right && game->richterPos.x != DownRightEdge)
+            if (right && game->richterPos.x != DownRightEdge)
             {
                 inputChar = '0';
 
                 moveRichterRight(&game->g_sContext, &game->richterPos);
             }
-            if ( left && game->richterPos.x != UpLeftEdge)
+            if (left && game->richterPos.x != UpLeftEdge)
             {
                 inputChar = '0';
 
                 moveRichterLeft(&game->g_sContext, &game->richterPos);
             }
         }
+       if(game->richterPos.x==monster_x&&game->richterPos.y==monster_y)
+       {
+           game->state=Battle;
+       }
     }
 }
