@@ -34,6 +34,7 @@ typedef struct
 extern Graphics_Image title8BPP_UNCOMP;
 extern Graphics_Image title_logo4BPP_UNCOMP;
 extern Graphics_Image sord4BPP_UNCOMP;
+extern Graphics_Image draculaDefault8BPP_UNCOMP;
 
 ///
 //  Game initialization
@@ -54,7 +55,7 @@ void drawOpeningSplash(Graphics_Context *g_sContext_p);
 ///
 
 void drawMainMenu(Graphics_Context *g_sContext_p);
-void drawMenuCursor(Graphics_Context *g_sContext_p, const int pos);
+void drawMenuCursor(Graphics_Context *g_sContext_p, const int cursor);
 void drawHighScores(Graphics_Context *g_sContext_p, const int score1, const int score2, const int score3);
 void drawHelpScreen(Graphics_Context *g_sContext_p);
 
@@ -73,9 +74,19 @@ void moveRichterLeft(Graphics_Context *g_sContext_p, boardPosition *richterPos);
 void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos);
 
 ///
+//  Battle Screen
+///
+
+// Draws the battle display
+void drawBattleDisplay(Graphics_Context *g_sContext_p);
+void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor);
+
+///
 //  Clearing Operations
 ///
 
 void clearScreen(Graphics_Context *g_sContext_p);
+
+void clearInfoBox(Graphics_Context *g_sContext_p);
 
 #endif
