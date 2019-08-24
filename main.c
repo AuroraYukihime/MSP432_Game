@@ -291,6 +291,7 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
     bool water = false;
     while (!gameOver)
     {
+
         getSampleJoyStick(&vx, &vy);
 
         bool up = (inputChar == 'w') || debouncedJoystickPushUp(vy);
@@ -331,9 +332,21 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
                 moveRichterLeft(&game->g_sContext, &game->richterPos);
             }
         }
-       if(game->richterPos.x==monster_x&&game->richterPos.y==monster_y)
-       {
-           game->state=Battle;
-       }
+        if (game->richterPos.x == monster_x && game->richterPos.y == monster_y
+                && game->state == Dungeon)
+        {
+            game->state = Battle;
+            clearScreen(&game->g_sContext);
+        }
+        if (game->richterPos.x == water_x && game->richterPos.y = water_y
+                && game->state == Dungeon)
+        {
+            water = true;
+        }
+        if (game->richterPos.x == fire_x && game->richterPos.y = fire_y
+                && game->state == Dungeon)
+        {
+            fire = true;
+        }
     }
 }
