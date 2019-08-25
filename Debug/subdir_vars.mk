@@ -15,6 +15,7 @@ C_SRCS += \
 ../RPG.c \
 ../Timer32_HAL.c \
 ../UART_HAL.c \
+../draculaDefault.c \
 ../main.c \
 ../sord.c \
 ../system_msp432p401r.c \
@@ -28,6 +29,7 @@ C_DEPS += \
 ./RPG.d \
 ./Timer32_HAL.d \
 ./UART_HAL.d \
+./draculaDefault.d \
 ./main.d \
 ./sord.d \
 ./system_msp432p401r.d \
@@ -41,6 +43,7 @@ OBJS += \
 ./RPG.obj \
 ./Timer32_HAL.obj \
 ./UART_HAL.obj \
+./draculaDefault.obj \
 ./main.obj \
 ./sord.obj \
 ./system_msp432p401r.obj \
@@ -54,6 +57,7 @@ OBJS__QUOTED += \
 "RPG.obj" \
 "Timer32_HAL.obj" \
 "UART_HAL.obj" \
+"draculaDefault.obj" \
 "main.obj" \
 "sord.obj" \
 "system_msp432p401r.obj" \
@@ -67,6 +71,7 @@ C_DEPS__QUOTED += \
 "RPG.d" \
 "Timer32_HAL.d" \
 "UART_HAL.d" \
+"draculaDefault.d" \
 "main.d" \
 "sord.d" \
 "system_msp432p401r.d" \
@@ -80,6 +85,7 @@ C_SRCS__QUOTED += \
 "../RPG.c" \
 "../Timer32_HAL.c" \
 "../UART_HAL.c" \
+"../draculaDefault.c" \
 "../main.c" \
 "../sord.c" \
 "../system_msp432p401r.c" \

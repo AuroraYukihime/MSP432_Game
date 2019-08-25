@@ -16,6 +16,7 @@ ORDERED_OBJS += \
 "./RPG.obj" \
 "./Timer32_HAL.obj" \
 "./UART_HAL.obj" \
+"./draculaDefault.obj" \
 "./main.obj" \
 "./sord.obj" \
 "./system_msp432p401r.obj" \
@@ -180,8 +181,8 @@ JustMonika_Chess.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "ADC_HAL.obj" "ButtonLED_HAL.obj" "Graphics_HAL.obj" "RPG.obj" "Timer32_HAL.obj" "UART_HAL.obj" "main.obj" "sord.obj" "system_msp432p401r.obj" "title.obj" "title_logo.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "ccs\startup_msp432p401r_ccs.obj" "fonts\fontcmtt16.obj" 
-	-$(RM) "ADC_HAL.d" "ButtonLED_HAL.d" "Graphics_HAL.d" "RPG.d" "Timer32_HAL.d" "UART_HAL.d" "main.d" "sord.d" "system_msp432p401r.d" "title.d" "title_logo.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "ccs\startup_msp432p401r_ccs.d" "fonts\fontcmtt16.d" 
+	-$(RM) "ADC_HAL.obj" "ButtonLED_HAL.obj" "Graphics_HAL.obj" "RPG.obj" "Timer32_HAL.obj" "UART_HAL.obj" "draculaDefault.obj" "main.obj" "sord.obj" "system_msp432p401r.obj" "title.obj" "title_logo.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "ccs\startup_msp432p401r_ccs.obj" "fonts\fontcmtt16.obj" 
+	-$(RM) "ADC_HAL.d" "ButtonLED_HAL.d" "Graphics_HAL.d" "RPG.d" "Timer32_HAL.d" "UART_HAL.d" "draculaDefault.d" "main.d" "sord.d" "system_msp432p401r.d" "title.d" "title_logo.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "ccs\startup_msp432p401r_ccs.d" "fonts\fontcmtt16.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

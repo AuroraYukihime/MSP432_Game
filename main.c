@@ -27,9 +27,10 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
 // Driving while for the Dungeon Screen
 void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
                        int monster_y, int fire_x, int fire_y, int water_x,
-                       int water_y);
+                       int water_y, bool *water, bool *fire, double* monster_hp);
 
-void battleController(RPG* game, unsigned vx, unsigned vy);
+void battleController(RPG* game, unsigned vx, unsigned vy, bool water,
+bool fire);
 
 ///
 //  Main Function
@@ -73,6 +74,7 @@ int main(void)
     int monster_x = vx;
     int monster_y = vy;
     getSampleJoyStick(&vx, &vy);
+    double monster_hp = 100;
     vx = vx % 5;
     vy = vy % 5;
     vx = 12 + vx * 25;
@@ -115,17 +117,32 @@ int main(void)
     int fire_y = vy;
     Graphics_setForegroundColor(&game.g_sContext, GRAPHICS_COLOR_RED);
     Graphics_fillCircle(&game.g_sContext, vx, vy, 5);
-    //
-
+    getSampleJoyStick(&vx, &vy);
+    bool monster_water = false;
+    bool monster_fire = false;
+    vx = vx % 3;
+    switch (vx)
+    {
+    case 0:
+        break;
+    case 1:
+        monster_water = true;
+        break;
+    case 2:
+        monster_fire = true;
+        break;
+    }
+    bool water = false;
+    bool fire = false;
     // Player control begins - auxillary function dictates the Dungeon screen
     dungeonController(&game, vx, vy, monster_x, monster_y, water_x, water_y,
-                      fire_x, fire_y);
+                      fire_x, fire_y, &water, &fire, &monster_hp);
 
     // Display battle screen
-    drawBattleDisplay(&game.g_sContext);
+    drawBattleDisplay(&game.g_sContext, water, fire);
 
     // Player control begins - auxillary function dictates the Battle screen
-    battleController(&game, vx, vy);
+    battleController(&game, vx, vy, water, fire);
 }
 
 ///
@@ -293,15 +310,16 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
 #define DownRightEdge 112
 void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
                        int monster_y, int fire_x, int fire_y, int water_x,
-                       int water_y)
+                       int water_y, bool *water, bool *fire, double *monster_hp)
 {
     uint8_t inputChar;
-    bool fire = false;
-    bool water = false;
+
+    //  bool fire = false;
+    //bool water = false;
     while (game->state == Dungeon)
     {
         getSampleJoyStick(&vx, &vy);
-
+        *monster_hp = *monster_hp + 0.0001;
         bool up = (inputChar == 'w') || debouncedJoystickPushUp(vy);
         bool down = (inputChar == 's') || debouncedJoystickPushDown(vy);
         bool right = (inputChar == 'd') || debouncedJoystickPushRight(vx);
@@ -338,28 +356,31 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
 
                 moveRichterLeft(&game->g_sContext, &game->richterPos);
             }
-        }
-        if (game->richterPos.x == monster_x && game->richterPos.y == monster_y)
-        {
-            game->state = Battle;
-            clearScreen(&game->g_sContext);
-        }
-        if (game->richterPos.x == water_x && game->richterPos.y == water_y)
-        {
-            water = true;
-        }
-        if (game->richterPos.x == fire_x && game->richterPos.y == fire_y)
-        {
-            fire = true;
+
+            if (game->richterPos.x == monster_x
+                    && game->richterPos.y == monster_y)
+            {
+                game->state = Battle;
+                clearScreen(&game->g_sContext);
+            }
+            if (game->richterPos.x == water_x && game->richterPos.y == water_y)
+            {
+                *water = true;
+            }
+            if (game->richterPos.x == fire_x && game->richterPos.y == fire_y)
+            {
+                *fire = true;
+            }
         }
     }
 }
 
-void battleController(RPG* game, unsigned vx, unsigned vy)
+void battleController(RPG* game, unsigned vx, unsigned vy, bool water,
+bool fire)
 {
     uint8_t inputChar = '0';
     int cursor = OPTION1;
-    while(game->state == Battle)
+    while (game->state == Battle)
     {
         getSampleJoyStick(&vx, &vy);
 
@@ -369,12 +390,12 @@ void battleController(RPG* game, unsigned vx, unsigned vy)
         if (up && cursor != OPTION1)
         {
             cursor--;
-            drawBattleCursor(&game->g_sContext, cursor);
+            drawBattleCursor(&game->g_sContext, cursor, water, fire);
         }
         if (down && cursor != OPTION3)
         {
             cursor++;
-            drawBattleCursor(&game->g_sContext, cursor);
+            drawBattleCursor(&game->g_sContext, cursor, water, fire);
         }
     }
 }

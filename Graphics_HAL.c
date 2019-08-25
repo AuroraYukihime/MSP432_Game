@@ -14,7 +14,8 @@ void InitFonts()
 
 void initGraphics(Graphics_Context *g_sContext_p)
 {
-    Graphics_initContext(g_sContext_p, &g_sCrystalfontz128x128, &g_sCrystalfontz128x128_funcs);
+    Graphics_initContext(g_sContext_p, &g_sCrystalfontz128x128,
+                         &g_sCrystalfontz128x128_funcs);
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_WHITE);
     Graphics_setBackgroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
     Graphics_setFont(g_sContext_p, &g_sFontCmtt12);
@@ -71,7 +72,7 @@ void drawMenuCursor(Graphics_Context *g_sContext_p, const int cursor)
     Graphics_setForegroundColor(g_sContext_p, COMMON_FOREGROUND);
 
     // Draw new cursor
-    switch(cursor)
+    switch (cursor)
     {
     case 0:
         // Main Menu - Play option
@@ -88,7 +89,8 @@ void drawMenuCursor(Graphics_Context *g_sContext_p, const int cursor)
     }
 }
 
-void drawHighScores(Graphics_Context *g_sContext_p, const int score1, const int score2, const int score3)
+void drawHighScores(Graphics_Context *g_sContext_p, const int score1,
+                    const int score2, const int score3)
 {
     clearScreen(g_sContext_p);
 
@@ -139,18 +141,20 @@ void drawHelpScreen(Graphics_Context *g_sContext_p)
 //  Dungeon Screen
 ///
 
-void drawMaroonSquare(Graphics_Context* g_sContext_p, unsigned int xMin, unsigned int xMax, unsigned int yMin, unsigned int yMax)
+void drawMaroonSquare(Graphics_Context* g_sContext_p, unsigned int xMin,
+                      unsigned int xMax, unsigned int yMin, unsigned int yMax)
 {
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_MAROON);
     Graphics_Rectangle maroon;
-        maroon.xMin = xMin;
-        maroon.xMax = xMax;
-        maroon.yMin = yMin;
-        maroon.yMax = yMax;
+    maroon.xMin = xMin;
+    maroon.xMax = xMax;
+    maroon.yMin = yMin;
+    maroon.yMax = yMax;
     Graphics_fillRectangle(g_sContext_p, &maroon);
 }
 
-void drawDungeonDisplay(Graphics_Context *g_sContext_p, boardPosition richterPos)
+void drawDungeonDisplay(Graphics_Context *g_sContext_p,
+                        boardPosition richterPos)
 {
     // Clear the screen
     clearScreen(g_sContext_p);
@@ -158,33 +162,33 @@ void drawDungeonDisplay(Graphics_Context *g_sContext_p, boardPosition richterPos
     // Orange squares are easy - just fill the screen with an orange rectangle
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_ORANGE);
     Graphics_Rectangle orangeSquares;
-        orangeSquares.xMin = 0;
-        orangeSquares.xMax = 124;
-        orangeSquares.yMin = 0;
-        orangeSquares.yMax = 124;
+    orangeSquares.xMin = 0;
+    orangeSquares.xMax = 124;
+    orangeSquares.yMin = 0;
+    orangeSquares.yMax = 124;
     Graphics_fillRectangle(g_sContext_p, &orangeSquares);
 
     // Draw row 1
-    drawMaroonSquare(g_sContext_p, a, b-1, 0, r1-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, 0, r1-1);
+    drawMaroonSquare(g_sContext_p, a, b - 1, 0, r1 - 1);
+    drawMaroonSquare(g_sContext_p, c, d - 1, 0, r1 - 1);
 
     // Draw row 2
-    drawMaroonSquare(g_sContext_p, 0, a-1, r1, r2-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r1, r2-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r1, r2-1);
+    drawMaroonSquare(g_sContext_p, 0, a - 1, r1, r2 - 1);
+    drawMaroonSquare(g_sContext_p, b, c - 1, r1, r2 - 1);
+    drawMaroonSquare(g_sContext_p, d, e - 1, r1, r2 - 1);
 
     // Draw row 3
-    drawMaroonSquare(g_sContext_p, a, b-1, r2, r3-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, r2, r3-1);
+    drawMaroonSquare(g_sContext_p, a, b - 1, r2, r3 - 1);
+    drawMaroonSquare(g_sContext_p, c, d - 1, r2, r3 - 1);
 
     // Draw row 4
-    drawMaroonSquare(g_sContext_p, 0, a-1, r3, r4-1);
-    drawMaroonSquare(g_sContext_p, b, c-1, r3, r4-1);
-    drawMaroonSquare(g_sContext_p, d, e-1, r3, r4-1);
+    drawMaroonSquare(g_sContext_p, 0, a - 1, r3, r4 - 1);
+    drawMaroonSquare(g_sContext_p, b, c - 1, r3, r4 - 1);
+    drawMaroonSquare(g_sContext_p, d, e - 1, r3, r4 - 1);
 
     // Draw row 5
-    drawMaroonSquare(g_sContext_p, a, b-1, r4, r5-1);
-    drawMaroonSquare(g_sContext_p, c, d-1, r4, r5-1);
+    drawMaroonSquare(g_sContext_p, a, b - 1, r4, r5 - 1);
+    drawMaroonSquare(g_sContext_p, c, d - 1, r4, r5 - 1);
 
     // Draw Richter position
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLACK);
@@ -209,7 +213,8 @@ void clear_player(Graphics_Context* g_sContext_p, int x, int y, bool current)
 void moveRichterUp(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 {
     // Remove the current player cursor
-    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+    clear_player(g_sContext_p, richterPos->x, richterPos->y,
+                 richterPos->maroon);
 
     // Redraw the player cursor in updated position
     richterPos->y -= 25;
@@ -226,7 +231,8 @@ void moveRichterUp(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 void moveRichterDown(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 {
     // Remove the current player cursor
-    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+    clear_player(g_sContext_p, richterPos->x, richterPos->y,
+                 richterPos->maroon);
 
     // Redraw the player cursor in updated position
     richterPos->y += 25;
@@ -243,7 +249,8 @@ void moveRichterDown(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 void moveRichterLeft(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 {
     // Remove the current player cursor
-    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+    clear_player(g_sContext_p, richterPos->x, richterPos->y,
+                 richterPos->maroon);
 
     // Redraw the player cursor in updated position
     richterPos->x -= 25;
@@ -260,7 +267,8 @@ void moveRichterLeft(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 {
     // Remove the current player cursor
-    clear_player(g_sContext_p, richterPos->x, richterPos->y, richterPos->maroon);
+    clear_player(g_sContext_p, richterPos->x, richterPos->y,
+                 richterPos->maroon);
 
     // Redraw the player cursor in updated position
     richterPos->x += 25;
@@ -278,7 +286,7 @@ void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 //  Battle Screen
 ///
 
-void drawBattleDisplay(Graphics_Context *g_sContext_p)
+void drawBattleDisplay(Graphics_Context *g_sContext_p, bool water, bool fire)
 {
     // Clear the screen
     clearScreen(g_sContext_p);
@@ -286,19 +294,19 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p)
     // Draw menu window
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
     Graphics_Rectangle menuWindow;
-        menuWindow.xMin = 27;
-        menuWindow.xMax = 127;
-        menuWindow.yMin = 84;
-        menuWindow.yMax = 127;
+    menuWindow.xMin = 27;
+    menuWindow.xMax = 127;
+    menuWindow.yMin = 84;
+    menuWindow.yMax = 127;
     Graphics_fillRectangle(g_sContext_p, &menuWindow);
 
     // Draw menu border
     Graphics_setForegroundColor(g_sContext_p, COMMON_FOREGROUND);
     Graphics_Rectangle menuBorder;
-        menuBorder.xMin = 27;
-        menuBorder.xMax = 127;
-        menuBorder.yMin = 84;
-        menuBorder.yMax = 127;
+    menuBorder.xMin = 27;
+    menuBorder.xMax = 127;
+    menuBorder.yMin = 84;
+    menuBorder.yMax = 127;
     Graphics_drawRectangle(g_sContext_p, &menuBorder);
 
     // Draw menu options
@@ -312,7 +320,7 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p)
     Graphics_drawString(g_sContext_p, waterMagic, -1, 30, 115, true);
 
     // Draw default cursor
-    drawBattleCursor(g_sContext_p, 0);
+    drawBattleCursor(g_sContext_p, 0, water, fire);
 
     // Draw Dracula!
     Graphics_drawImage(g_sContext_p, &draculaDefault8BPP_UNCOMP, 25, 20);
@@ -320,19 +328,19 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p)
     // Draw information box
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
     Graphics_Rectangle infoWindow;
-        infoWindow.xMin = 0;
-        infoWindow.xMax = 127;
-        infoWindow.yMin = 0;
-        infoWindow.yMax = 15;
+    infoWindow.xMin = 0;
+    infoWindow.xMax = 127;
+    infoWindow.yMin = 0;
+    infoWindow.yMax = 15;
     Graphics_fillRectangle(g_sContext_p, &infoWindow);
 
     // Draw information window border
     Graphics_setForegroundColor(g_sContext_p, COMMON_FOREGROUND);
     Graphics_Rectangle infoBorder;
-        infoBorder.xMin = 0;
-        infoBorder.xMax = 127;
-        infoBorder.yMin = 0;
-        infoBorder.yMax = 15;
+    infoBorder.xMin = 0;
+    infoBorder.xMax = 127;
+    infoBorder.yMin = 0;
+    infoBorder.yMax = 15;
     Graphics_drawRectangle(g_sContext_p, &infoBorder);
 
     // Draw information box text
@@ -351,7 +359,9 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p)
     Graphics_drawString(g_sContext_p, richHealth, -1, 65, 70, true);
 }
 
-void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor)
+void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor,
+bool water,
+                      bool fire)
 {
     // Erase previous cursors
     Graphics_Rectangle eraseCursor;
@@ -365,7 +375,7 @@ void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor)
     Graphics_fillRectangle(g_sContext_p, &eraseCursor);
 
     // Draw new cursor
-    switch(cursor)
+    switch (cursor)
     {
     case 0:
         Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 85);
@@ -376,20 +386,44 @@ void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor)
         Graphics_drawString(g_sContext_p, infoText0, -1, 1, 1, true);
         break;
     case 1:
-        Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 100);
+        if (water)
+        {
+            Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 100);
 
-        // Draw information box text
-        clearInfoBox(g_sContext_p);
-        int8_t infoText1[30] = "Fire Cross ";
-        Graphics_drawString(g_sContext_p, infoText1, -1, 1, 1, true);
+            // Draw information box text
+            clearInfoBox(g_sContext_p);
+            int8_t infoText1[30] = "Fire Cross ";
+            Graphics_drawString(g_sContext_p, infoText1, -1, 1, 1, true);
+        }
+        else
+        {
+            Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 100);
+
+            // Draw information box text
+            clearInfoBox(g_sContext_p);
+            int8_t infoText1[30] = " No Fire Cross ";
+            Graphics_drawString(g_sContext_p, infoText1, -1, 1, 1, true);
+        }
         break;
     case 2:
-        Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 115);
+        if (fire)
+        {
+            Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 115);
 
-        // Draw information box text
-        clearInfoBox(g_sContext_p);
-        int8_t infoText2[30] = "Holy Water ";
-        Graphics_drawString(g_sContext_p, infoText2, -1, 1, 1, true);
+            // Draw information box text
+            clearInfoBox(g_sContext_p);
+            int8_t infoText2[30] = "Holy Water ";
+            Graphics_drawString(g_sContext_p, infoText2, -1, 1, 1, true);
+        }
+        else
+        {
+            Graphics_drawImage(g_sContext_p, &sord4BPP_UNCOMP, 5, 115);
+
+            // Draw information box text
+            clearInfoBox(g_sContext_p);
+            int8_t infoText2[30] = "No Holy Water ";
+            Graphics_drawString(g_sContext_p, infoText2, -1, 1, 1, true);
+        }
         break;
     }
 }
@@ -409,18 +443,18 @@ void clearInfoBox(Graphics_Context *g_sContext_p)
     // Draw information box
     Graphics_setForegroundColor(g_sContext_p, GRAPHICS_COLOR_BLUE);
     Graphics_Rectangle infoWindow;
-        infoWindow.xMin = 0;
-        infoWindow.xMax = 127;
-        infoWindow.yMin = 0;
-        infoWindow.yMax = 15;
+    infoWindow.xMin = 0;
+    infoWindow.xMax = 127;
+    infoWindow.yMin = 0;
+    infoWindow.yMax = 15;
     Graphics_fillRectangle(g_sContext_p, &infoWindow);
 
     // Draw information window border
     Graphics_setForegroundColor(g_sContext_p, COMMON_FOREGROUND);
     Graphics_Rectangle infoBorder;
-        infoBorder.xMin = 0;
-        infoBorder.xMax = 127;
-        infoBorder.yMin = 0;
-        infoBorder.yMax = 15;
+    infoBorder.xMin = 0;
+    infoBorder.xMax = 127;
+    infoBorder.yMin = 0;
+    infoBorder.yMax = 15;
     Graphics_drawRectangle(g_sContext_p, &infoBorder);
 }

@@ -78,8 +78,8 @@ void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 ///
 
 // Draws the battle display
-void drawBattleDisplay(Graphics_Context *g_sContext_p);
-void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor);
+void drawBattleDisplay(Graphics_Context *g_sContext_p,bool water,bool fire);
+void drawBattleCursor(Graphics_Context *g_sContext_p, const int cursor,bool fire, bool water);
 
 ///
 //  Clearing Operations
