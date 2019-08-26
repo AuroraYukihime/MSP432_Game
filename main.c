@@ -453,7 +453,7 @@ bool fire,
             GRAPHICS_COLOR_BLACK);
             Graphics_drawString(&game->g_sContext, dracHealth, -1, 65, 30,
             true);
-            int i = 0;
+           // int i = 0;
             OneShotSWTimer_t myTimer;
             InitOneShotSWTimer(&myTimer, &timer0, 1000000);
             StartOneShotSWTimer(&myTimer);
