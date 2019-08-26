@@ -27,10 +27,11 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
 // Driving while for the Dungeon Screen
 void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
                        int monster_y, int fire_x, int fire_y, int water_x,
-                       int water_y, bool *water, bool *fire, double* monster_hp);
+                       int water_y, bool *water, bool *fire, int* monster_hp);
 
 void battleController(RPG* game, unsigned vx, unsigned vy, bool water,
-bool fire);
+bool fire,
+                      int monster_hp);
 
 ///
 //  Main Function
@@ -74,7 +75,7 @@ int main(void)
     int monster_x = vx;
     int monster_y = vy;
     getSampleJoyStick(&vx, &vy);
-    double monster_hp = 100;
+    int monster_hp = 100;
     vx = vx % 5;
     vy = vy % 5;
     vx = 12 + vx * 25;
@@ -118,20 +119,6 @@ int main(void)
     Graphics_setForegroundColor(&game.g_sContext, GRAPHICS_COLOR_RED);
     Graphics_fillCircle(&game.g_sContext, vx, vy, 5);
     getSampleJoyStick(&vx, &vy);
-    bool monster_water = false;
-    bool monster_fire = false;
-    vx = vx % 3;
-    switch (vx)
-    {
-    case 0:
-        break;
-    case 1:
-        monster_water = true;
-        break;
-    case 2:
-        monster_fire = true;
-        break;
-    }
     bool water = false;
     bool fire = false;
     // Player control begins - auxillary function dictates the Dungeon screen
@@ -139,10 +126,10 @@ int main(void)
                       fire_x, fire_y, &water, &fire, &monster_hp);
 
     // Display battle screen
-    drawBattleDisplay(&game.g_sContext, water, fire);
+    drawBattleDisplay(&game.g_sContext, water, fire, monster_hp);
 
     // Player control begins - auxillary function dictates the Battle screen
-    battleController(&game, vx, vy, water, fire);
+    battleController(&game, vx, vy, water, fire, monster_hp);
 }
 
 ///
@@ -310,16 +297,22 @@ void mainMenu(RPG* game, button_t* BoosterpackJoystickSelect, unsigned vx,
 #define DownRightEdge 112
 void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
                        int monster_y, int fire_x, int fire_y, int water_x,
-                       int water_y, bool *water, bool *fire, double *monster_hp)
+                       int water_y, bool *water, bool *fire, int *monster_hp)
 {
     uint8_t inputChar;
-
+    int counter = 1;
     //  bool fire = false;
     //bool water = false;
     while (game->state == Dungeon)
     {
         getSampleJoyStick(&vx, &vy);
-        *monster_hp = *monster_hp + 0.0001;
+        counter++;
+        if (counter == 50000)
+        {
+            if (*monster_hp < 199)
+                *monster_hp = *monster_hp + 1;
+            counter = 0;
+        }
         bool up = (inputChar == 'w') || debouncedJoystickPushUp(vy);
         bool down = (inputChar == 's') || debouncedJoystickPushDown(vy);
         bool right = (inputChar == 'd') || debouncedJoystickPushRight(vx);
@@ -376,8 +369,27 @@ void dungeonController(RPG* game, unsigned vx, unsigned vy, int monster_x,
 }
 
 void battleController(RPG* game, unsigned vx, unsigned vy, bool water,
-bool fire)
+bool fire,
+                      int monster_hp)
 {
+    getSampleJoyStick(&vx, &vy);
+    int player_hp = 100;
+    bool monster_water = false;
+    bool monster_fire = false;
+    vx = vx % 3;
+    switch (vx)
+    {
+    case 0:
+        break;
+    case 1:
+        monster_water = true;
+        break;
+    case 2:
+        monster_fire = true;
+        break;
+    }
+    button_t JoystickButton;
+    initButton(&JoystickButton, GPIO_PORT_P4, GPIO_PIN1, &timer1);
     uint8_t inputChar = '0';
     int cursor = OPTION1;
     while (game->state == Battle)
@@ -396,6 +408,86 @@ bool fire)
         {
             cursor++;
             drawBattleCursor(&game->g_sContext, cursor, water, fire);
+        }
+        if (ButtonPushed(&JoystickButton))
+        {
+            switch (cursor)
+            {
+            case 0:
+                monster_hp = monster_hp - 15;
+                break;
+            case 1:
+                if (water == true)
+                {
+                    if (monster_fire == true)
+                    {
+                        monster_hp = monster_hp - 40;
+                    }
+                    else
+                    {
+                        monster_hp = monster_hp - 20;
+                    }
+                }
+                break;
+            case 2:
+                if (fire == true)
+                {
+                    if (monster_water == true)
+                    {
+                        monster_hp = monster_hp - 40;
+                    }
+                    else
+                    {
+                        monster_hp = monster_hp - 20;
+                    }
+                }
+                break;
+            }
+            int8_t dracHealth[30] = "100 ";
+            make_3digit_NumString(monster_hp, (char*) dracHealth);
+            dracHealth[3] = '/';
+            // dracHealth[4] = dracHealth[0];
+            // dracHealth[5] = dracHealth[1];
+            // dracHealth[6] = dracHealth[2];
+            Graphics_setBackgroundColor(&game->g_sContext,
+            GRAPHICS_COLOR_BLACK);
+            Graphics_drawString(&game->g_sContext, dracHealth, -1, 65, 30,
+            true);
+            int i = 0;
+            OneShotSWTimer_t myTimer;
+            InitOneShotSWTimer(&myTimer, &timer0, 1000000);
+            StartOneShotSWTimer(&myTimer);
+
+            while (!OneShotSWTimerExpired(&myTimer))
+                //delay for 3 seconds
+                ;
+            getSampleJoyStick(&vx, &vy);
+            if (monster_hp != 0)
+            {
+                vy = vy % 5;
+                switch (vy)
+                {
+                case 0:
+                    player_hp = player_hp - 10;
+                    break;
+                case 1:
+                    player_hp = player_hp - 15;
+                    break;
+                case 2:
+                    player_hp = player_hp - 20;
+                    break;
+                case 3:
+                    player_hp = player_hp - 25;
+                    break;
+                case 4:
+                    player_hp = player_hp - 40;
+                    break;
+                }
+                int8_t richHealth[30] = "100/100 ";
+                make_3digit_NumString(player_hp, (char*) richHealth);
+                Graphics_drawString(&game->g_sContext, richHealth, -1, 65, 70,
+                                    true);
+            }
         }
     }
 }

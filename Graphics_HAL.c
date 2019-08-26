@@ -286,7 +286,7 @@ void moveRichterRight(Graphics_Context *g_sContext_p, boardPosition *richterPos)
 //  Battle Screen
 ///
 
-void drawBattleDisplay(Graphics_Context *g_sContext_p, bool water, bool fire)
+void drawBattleDisplay(Graphics_Context *g_sContext_p, bool water, bool fire,int health)
 {
     // Clear the screen
     clearScreen(g_sContext_p);
@@ -348,9 +348,15 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p, bool water, bool fire)
     Graphics_drawString(g_sContext_p, infoText, -1, 1, 1, true);
 
     // Health display
+
     int8_t dracName[30] = "Dracula ";
     int8_t dracHealth[30] = "100/100 ";
+    make_3digit_NumString(health,(char*)dracHealth);
     int8_t richName[30] = "Richter ";
+    dracHealth[3]='/';
+    dracHealth[4]=dracHealth[0];
+    dracHealth[5]=dracHealth[1];
+    dracHealth[6]=dracHealth[2];
     int8_t richHealth[30] = "100/100 ";
     Graphics_setBackgroundColor(g_sContext_p, COMMON_BACKGROUND);
     Graphics_drawString(g_sContext_p, dracName, -1, 65, 20, true);
@@ -457,4 +463,11 @@ void clearInfoBox(Graphics_Context *g_sContext_p)
     infoBorder.yMin = 0;
     infoBorder.yMax = 15;
     Graphics_drawRectangle(g_sContext_p, &infoBorder);
+}
+void make_3digit_NumString(unsigned int num, char *string)//these were used for testing
+{
+    string[0] = (num / 100) + '0';
+    string[1] = ((num % 100) / 10) + '0';
+    string[2] = ((num % 10) / 1) + '0';
+    string[3] = 0;
 }
