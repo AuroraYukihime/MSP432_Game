@@ -392,6 +392,9 @@ bool fire,
     initButton(&JoystickButton, GPIO_PORT_P4, GPIO_PIN1, &timer1);
     uint8_t inputChar = '0';
     int cursor = OPTION1;
+    bool hit=false;
+    bool monster_dead=false;
+    bool hero_dead=false;
     while (game->state == Battle)
     {
         getSampleJoyStick(&vx, &vy);
@@ -409,24 +412,35 @@ bool fire,
             cursor++;
             drawBattleCursor(&game->g_sContext, cursor, water, fire);
         }
-        if (ButtonPushed(&JoystickButton))
+        if (ButtonPushed(&JoystickButton)&&hero_dead==false)
         {
             switch (cursor)
             {
             case 0:
-                monster_hp = monster_hp - 15;
+                if (monster_hp >= 15)
+                    monster_hp = monster_hp - 15;
+                else
+                    monster_hp = 0;
+                hit=true;
                 break;
             case 1:
                 if (water == true)
                 {
                     if (monster_fire == true)
                     {
-                        monster_hp = monster_hp - 40;
+                        if (monster_hp >= 40)
+                            monster_hp = monster_hp - 40;
+                        else
+                            monster_hp = 0;
                     }
                     else
                     {
-                        monster_hp = monster_hp - 20;
+                        if (monster_hp >= 20)
+                            monster_hp = monster_hp - 20;
+                        else
+                            monster_hp = 0;
                     }
+                    hit=true;
                 }
                 break;
             case 2:
@@ -434,14 +448,25 @@ bool fire,
                 {
                     if (monster_water == true)
                     {
-                        monster_hp = monster_hp - 40;
+                        if (monster_hp >= 40)
+                            monster_hp = monster_hp - 40;
+                        else
+                            monster_hp = 0;
                     }
                     else
                     {
-                        monster_hp = monster_hp - 20;
+                        if (monster_hp >= 20)
+                            monster_hp = monster_hp - 20;
+                        else
+                            monster_hp = 0;
                     }
+                    hit=true;
                 }
                 break;
+            }
+            if(monster_hp==0)
+            {
+                monster_dead=true;
             }
             int8_t dracHealth[30] = "100 ";
             make_3digit_NumString(monster_hp, (char*) dracHealth);
@@ -453,7 +478,7 @@ bool fire,
             GRAPHICS_COLOR_BLACK);
             Graphics_drawString(&game->g_sContext, dracHealth, -1, 65, 30,
             true);
-           // int i = 0;
+            // int i = 0;
             OneShotSWTimer_t myTimer;
             InitOneShotSWTimer(&myTimer, &timer0, 1000000);
             StartOneShotSWTimer(&myTimer);
@@ -462,32 +487,52 @@ bool fire,
                 //delay for 3 seconds
                 ;
             getSampleJoyStick(&vx, &vy);
-            if (monster_hp != 0)
+            if (monster_hp != 0&&hit==true)
             {
                 vy = vy % 5;
                 switch (vy)
                 {
                 case 0:
-                    player_hp = player_hp - 10;
+                    if (player_hp >= 10)
+                        player_hp = player_hp - 10;
+                    else
+                        player_hp = 0;
                     break;
                 case 1:
-                    player_hp = player_hp - 15;
+                    if (player_hp >= 15)
+                        player_hp = player_hp - 15;
+                    else
+                        player_hp = 0;
                     break;
                 case 2:
-                    player_hp = player_hp - 20;
+                    if (player_hp >= 20)
+                        player_hp = player_hp - 20;
+                    else
+                        player_hp = 0;
                     break;
                 case 3:
-                    player_hp = player_hp - 25;
+                    if (player_hp >= 25)
+                        player_hp = player_hp - 25;
+                    else
+                        player_hp = 0;
                     break;
                 case 4:
-                    player_hp = player_hp - 40;
+                    if (player_hp >= 40)
+                        player_hp = player_hp - 40;
+                    else
+                        player_hp = 0;
                     break;
                 }
                 int8_t richHealth[30] = "100/100 ";
                 make_3digit_NumString(player_hp, (char*) richHealth);
                 Graphics_drawString(&game->g_sContext, richHealth, -1, 65, 70,
-                                    true);
+                true);
             }
+            if(monster_hp==0)
+            {
+                monster_dead=true;
+            }
+            hit=false;
         }
     }
 }
