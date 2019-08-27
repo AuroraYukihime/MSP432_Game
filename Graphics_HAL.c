@@ -342,7 +342,6 @@ void drawBattleDisplay(Graphics_Context *g_sContext_p, bool water, bool fire,int
     infoBorder.yMin = 0;
     infoBorder.yMax = 15;
     Graphics_drawRectangle(g_sContext_p, &infoBorder);
-
     // Draw information box text
     int8_t infoText[30] = "Vampire Killer ";
     Graphics_drawString(g_sContext_p, infoText, -1, 1, 1, true);
